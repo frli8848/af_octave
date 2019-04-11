@@ -3,7 +3,7 @@
 
 /***
  *
- *  Octave (oct) gateway function for af::convolve
+ *  Octave (oct) gateway function for af::convolve1
  *
  ***/
 
@@ -13,6 +13,8 @@ DEFUN_DLD (af_conv, args, nlhs,
 \n\
 AF_CONV - Computes convolutions of the columns of two matricies\n\
 A and B using the ArrayFire general purpose GPU library.\n\
+The ArrayFire 1D algorithm will automatically switch between \n\
+spatial and frequency domain processing depending on the array sizes.\n\
 \n\
 Input parameters:\n\
 \n\
@@ -62,13 +64,17 @@ Copyright @copyright{} 2019 Fredrik Lingvall.\n\
 
   // AF_CONV_DEFAULT Output of the convolution is the same size as input.
   // AF_CONV_EXPAND  Output of the convolution is signal_len + filter_len - 1.
-  af::array af_Y = af::convolve(af_A, af_B, AF_CONV_EXPAND);
+  // AF_CONV_AUTO, AF_CONV_SPATIAL, or AF_CONV_FREQ
+
+  // Apperently, we cannot do large spatial conv:s https://github.com/arrayfire/arrayfire/issues/347
+  //af::array af_Y = af::convolve1(af_A, af_B, AF_CONV_EXPAND, AF_CONV_SPATIAL);
+  af::array af_Y = af::convolve1(af_A, af_B, AF_CONV_EXPAND); // 1D convolution.
 
   // Create an output matrix for the impulse response
   Matrix Ymat(M_A+M_B-1, N_A);
-  double *Y = Ymat.fortran_vec();
+  double *Y = (double*) Ymat.fortran_vec();
 
-  // Copy data back to the host.
+  //Copy data back to the host.
   af_Y.host(Y);
 
   oct_retval.append(Ymat);
