@@ -53,7 +53,7 @@ Copyright @copyright{} 2019 Fredrik Lingvall.\n\
 
   // Check filter dim.
   if ( (N_B != N_A) && (N_B != 1) ) {
-    error("Wrong  dim of 2nd argument. The number of columns in arg 2 must be 1 or must match the number of columns in 1st arg!");
+    error("Wrong dim of 2nd argument. The number of columns in arg 2 must be 1 or must match the number of columns in 1st arg!");
   }
 
   // Create device arrays and copy host data.

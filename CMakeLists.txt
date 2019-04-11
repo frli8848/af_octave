@@ -2,9 +2,10 @@
 # Copyright (C) 2019 Fredrik Lingvall
 #
 
-project (af-octave)
+#project (af-octave CXX CUDA)
+project (af-octave CXX)
 
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 
 # Add path to the various cmake files to detect Matlab, Octave, FTTW, etc.
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
@@ -48,7 +49,7 @@ if (ArrayFire_FOUND)
 endif (ArrayFire_FOUND)
 
 # Or if you intend to use CUDA, you need it as well as NVVM:
-#find_package(CUDA 7.0) # See: http://arrayfire.org/docs/releasenotes.htm (this module comes with CMake).
+#find_package(CUDA 8.0) # See: http://arrayfire.org/docs/releasenotes.htm (this module comes with CMake).
 #set (ArrayFire_EXTRA_LIBS ${ARRAYFIRE_EXTRA_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${CUDA_LIBRARIES} ${NVVM_LIB})
 
 # Octave oct flags.
@@ -64,6 +65,56 @@ include_directories (
   ${OCTAVE_INCLUDE_DIRS}
   ${ArrayFire_INCLUDE_DIRS}
   )
+
+#
+# af_init
+#
+
+set (oct_af_init_SOURCE_FILES
+  oct/oct_af_init.cc
+  )
+
+add_library (oct_af_init MODULE
+  ${oct_af_init_SOURCE_FILES}
+  )
+
+target_link_libraries (oct_af_init
+  ${OCTAVE_LIBRARIES}
+  ${AF_LIBRARIES}
+  ${ArrayFire_EXTRA_LIBS}
+  )
+
+set_target_properties (oct_af_init PROPERTIES
+  C_STANDARD 99
+  CXX_STANDARD 11
+  COMPILE_FLAGS "${OCT_FLAGS}"
+  LINK_FLAGS ${OCT_LD_FLAGS}
+  SUFFIX ".oct" PREFIX "" OUTPUT_NAME "af_init")
+
+#
+# af_test
+#
+
+set (oct_af_test_SOURCE_FILES
+  oct/oct_af_test.cc
+  )
+
+add_library (oct_af_test MODULE
+  ${oct_af_test_SOURCE_FILES}
+  )
+
+target_link_libraries (oct_af_test
+  ${OCTAVE_LIBRARIES}
+  ${AF_LIBRARIES}
+  ${ArrayFire_EXTRA_LIBS}
+  )
+
+set_target_properties (oct_af_test PROPERTIES
+  C_STANDARD 99
+  CXX_STANDARD 11
+  COMPILE_FLAGS "${OCT_FLAGS}"
+  LINK_FLAGS ${OCT_LD_FLAGS}
+  SUFFIX ".oct" PREFIX "" OUTPUT_NAME "af_test")
 
 #
 # af_conv
