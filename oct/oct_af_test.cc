@@ -1,5 +1,6 @@
 #include <octave/oct.h>
 #include <arrayfire.h>
+#include <iostream>
 
 /***
  *
