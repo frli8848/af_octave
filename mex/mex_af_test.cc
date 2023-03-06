@@ -1,4 +1,4 @@
-#include <octave/oct.h>
+#include "mex.h"
 #include <arrayfire.h>
 #include <iostream>
 
@@ -6,33 +6,20 @@
 
 /***
  *
- *  Octave (oct) gateway function to test ArrayFire's
+ *  MATLAB (mex) gateway function to test ArrayFire's
  *  backends.
  *
  ***/
 
-DEFUN_DLD (af_test, args, nlhs,
-           "-*- texinfo -*-\n\
-@deftypefn {Loadable Function} {} [Y] = af_test()\n\
-\n\
-AF_TEST - Test run ArrayFire's detected backends\n\
-\n\
-af_test is an oct-function that is a part of ...\n\
-@url{https://github.com/frli8848/af_octave}.\n\
-\n\
-Copyright @copyright{} 2019 Fredrik Lingvall.\n\
-@seealso {af_init}\n\
-@end deftypefn")
-{
-  octave_value_list oct_retval;
+extern void _main();
 
-  int nrhs = args.length ();
+void  mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
+{
 
   // Check for proper number of arguments
 
   if (nrhs != 0) {
-    error("af_test has no input arguments!");
-    return oct_retval;
+    mexErrMsgTxt("af_test has no input arguments!");
   }
 
   std::cout << std::endl << "Number of avialable ArrayFire backends: " << af::getBackendCount() << std::endl << std::endl;
@@ -106,5 +93,5 @@ Copyright @copyright{} 2019 Fredrik Lingvall.\n\
     std::cerr << e.what() << std::endl;
   }
 
-  return oct_retval;
+  return;
 }

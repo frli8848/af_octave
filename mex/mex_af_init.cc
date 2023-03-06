@@ -1,4 +1,4 @@
-#include <octave/oct.h>
+#include "mex.h"
 #include <arrayfire.h>
 #include <iostream>
 
@@ -6,31 +6,18 @@
 
 /***
  *
- *  Octave (oct) gateway function to initialze ArrayFire
+ *  MATLAB (mex) gateway function to initialze ArrayFire
  *
  ***/
 
-DEFUN_DLD (af_init, args, nlhs,
-           "-*- texinfo -*-\n\
-@deftypefn {Loadable Function} {} [Y] = af_init()\n\
-\n\
-AF_INIT - Initialize ArrayFire backend\n\
-\n\
-af_init is an oct-function that is a part of ...\n\
-@url{https://github.com/frli8848/af_octave}.\n\
-\n\
-Copyright @copyright{} 2019-2023 Fredrik Lingvall.\n\
-@end deftypefn")
+extern void _main();
+
+void  mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
-  octave_value_list oct_retval;
-
-  int nrhs = args.length ();
-
   // Check for proper number of arguments
 
   if (nrhs != 0) {
-    error("af_init has no input arguments!");
-    return oct_retval;
+    mexErrMsgTxt("af_init has no input arguments!");
   }
 
   std::cout << "ArrayFire backend init" << std::endl;
@@ -70,5 +57,5 @@ Copyright @copyright{} 2019-2023 Fredrik Lingvall.\n\
     std::cout << "Using CPU ArrayFire backend" << std::endl;
   }
 
-  return oct_retval;
+  return;
 }

@@ -1,28 +1,31 @@
 #
-# Copyright (C) 2019 Fredrik Lingvall
+# Copyright (C) 2019,2023 Fredrik Lingvall
 #
 
 #project (af-octave CXX CUDA)
-project (af-octave CXX)
+project (af CXX)
 
 cmake_minimum_required(VERSION 3.10)
 
 # Add path to the various cmake files to detect Matlab, Octave, FTTW, etc.
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-# From http://www.coolprop.org/coolprop/wrappers/Octave/index.html
-find_package (Octave REQUIRED)
-
 # https://arrayfire.com/building-an-arrayfire-program-with-cmake/
-
+#
 # Add the path to ArrayFire's cmake modules.
-if (UNIX)
-  set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/local/share/ArrayFire/cmake/")
-endif (UNIX)
+#if (UNIX)
+#  set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/local/share/ArrayFire/cmake/")
+#endif (UNIX)
 
 find_package (ArrayFire REQUIRED)
 
 if (ArrayFire_FOUND)
+
+  message (STATUS "ArrayFire version: ${ArrayFire_VERSION}")
+  message (STATUS "ArrayFire include: ${ArrayFire_INCLUDE_DIRS}")
+  message (STATUS "ArrayFire default libs: ${ArrayFire_LIBRARIES}")
+  message (STATUS "ArrayFire Unified libs: ${ArrayFire_Unified_LIBRARIES}")
+
 
   message (STATUS "ArrayFire version: ${ArrayFire_VERSION}")
   message (STATUS "ArrayFire include: ${ArrayFire_INCLUDE_DIRS}")
@@ -48,116 +51,5 @@ if (ArrayFire_FOUND)
   endif (ArrayFire_OpenCL_FOUND)
 endif (ArrayFire_FOUND)
 
-# Or if you intend to use CUDA, you need it as well as NVVM:
-#find_package(CUDA 8.0) # See: http://arrayfire.org/docs/releasenotes.htm (this module comes with CMake).
-#set (ArrayFire_EXTRA_LIBS ${ARRAYFIRE_EXTRA_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${CUDA_LIBRARIES} ${NVVM_LIB})
-
-# Octave oct flags.
-set (OCT_LD_FLAGS "${CMAKE_LD_FLAGS} ${OCTAVE_LINK_FLAGS}")
-
-#
-# Include paths
-#
-
-include_directories (
-  ${PROJECT_BINARY_DIR}
-  ${PROJECT_SOURCE_DIR}/include
-  ${OCTAVE_INCLUDE_DIRS}
-  ${ArrayFire_INCLUDE_DIRS}
-  )
-
-#
-# af_init
-#
-
-set (oct_af_init_SOURCE_FILES
-  oct/oct_af_init.cc
-  )
-
-add_library (oct_af_init MODULE
-  ${oct_af_init_SOURCE_FILES}
-  )
-
-target_link_libraries (oct_af_init
-  ${OCTAVE_LIBRARIES}
-  ${AF_LIBRARIES}
-  ${ArrayFire_EXTRA_LIBS}
-  )
-
-set_target_properties (oct_af_init PROPERTIES
-  CXX_STANDARD 11
-  COMPILE_FLAGS "${OCT_FLAGS}"
-  LINK_FLAGS ${OCT_LD_FLAGS}
-  SUFFIX ".oct" PREFIX "" OUTPUT_NAME "af_init")
-
-#
-# af_test
-#
-
-set (oct_af_test_SOURCE_FILES
-  oct/oct_af_test.cc
-  )
-
-add_library (oct_af_test MODULE
-  ${oct_af_test_SOURCE_FILES}
-  )
-
-target_link_libraries (oct_af_test
-  ${OCTAVE_LIBRARIES}
-  ${AF_LIBRARIES}
-  ${ArrayFire_EXTRA_LIBS}
-  )
-
-set_target_properties (oct_af_test PROPERTIES
-  CXX_STANDARD 11
-  COMPILE_FLAGS "${OCT_FLAGS}"
-  LINK_FLAGS ${OCT_LD_FLAGS}
-  SUFFIX ".oct" PREFIX "" OUTPUT_NAME "af_test")
-
-#
-# af_conv
-#
-
-set (oct_af_conv_SOURCE_FILES
-  oct/oct_af_conv.cc
-  )
-
-add_library (oct_af_conv MODULE
-  ${oct_af_conv_SOURCE_FILES}
-  )
-
-target_link_libraries (oct_af_conv
-  ${OCTAVE_LIBRARIES}
-  ${AF_LIBRARIES}
-  ${ArrayFire_EXTRA_LIBS}
-  )
-
-set_target_properties (oct_af_conv PROPERTIES
-  CXX_STANDARD 11
-  COMPILE_FLAGS "${OCT_FLAGS}"
-  LINK_FLAGS ${OCT_LD_FLAGS}
-  SUFFIX ".oct" PREFIX "" OUTPUT_NAME "af_conv")
-
-#
-# af_fftconv
-#
-
-set (oct_af_fftconv_SOURCE_FILES
-  oct/oct_af_fftconv.cc
-  )
-
-add_library (oct_af_fftconv MODULE
-  ${oct_af_fftconv_SOURCE_FILES}
-  )
-
-target_link_libraries (oct_af_fftconv
-  ${OCTAVE_LIBRARIES}
-  ${AF_LIBRARIES}
-  ${ArrayFire_EXTRA_LIBS}
-  )
-
-set_target_properties (oct_af_fftconv PROPERTIES
-  CXX_STANDARD 11
-  COMPILE_FLAGS "${OCT_FLAGS}"
-  LINK_FLAGS ${OCT_LD_FLAGS}
-  SUFFIX ".oct" PREFIX "" OUTPUT_NAME "af_fftconv")
+add_subdirectory(oct)
+add_subdirectory(mex)
