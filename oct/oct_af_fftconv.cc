@@ -42,12 +42,12 @@ Copyright @copyright{} 2019 Fredrik Lingvall.\n\
   }
 
   const Matrix tmp0 = args(0).matrix_value();
-  double *A = (double*) tmp0.fortran_vec();
+  double *A = (double*) tmp0.data();
   octave_idx_type M_A = args(0).matrix_value().rows();
   octave_idx_type N_A = args(0).matrix_value().cols();
 
   const Matrix tmp1 = args(1).matrix_value();
-  double *B = (double*) tmp1.fortran_vec();
+  double *B = (double*) tmp1.data();
   octave_idx_type M_B = args(1).matrix_value().rows();
   octave_idx_type N_B = args(1).matrix_value().cols();
 
@@ -66,7 +66,7 @@ Copyright @copyright{} 2019 Fredrik Lingvall.\n\
 
   // Create an output matrix for the impulse response
   Matrix Ymat(M_A+M_B-1, N_A);
-  double *Y = Ymat.fortran_vec();
+  double *Y = (double*) Ymat.data();
 
   // Copy data back to the host.
   af_Y.host(Y);

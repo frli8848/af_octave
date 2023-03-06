@@ -2,6 +2,8 @@
 #include <arrayfire.h>
 #include <iostream>
 
+#include <iostream>
+
 /***
  *
  *  Octave (oct) gateway function to initialze ArrayFire

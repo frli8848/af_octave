@@ -85,7 +85,6 @@ target_link_libraries (oct_af_init
   )
 
 set_target_properties (oct_af_init PROPERTIES
-  C_STANDARD 99
   CXX_STANDARD 11
   COMPILE_FLAGS "${OCT_FLAGS}"
   LINK_FLAGS ${OCT_LD_FLAGS}
@@ -110,7 +109,6 @@ target_link_libraries (oct_af_test
   )
 
 set_target_properties (oct_af_test PROPERTIES
-  C_STANDARD 99
   CXX_STANDARD 11
   COMPILE_FLAGS "${OCT_FLAGS}"
   LINK_FLAGS ${OCT_LD_FLAGS}
@@ -135,7 +133,6 @@ target_link_libraries (oct_af_conv
   )
 
 set_target_properties (oct_af_conv PROPERTIES
-  C_STANDARD 99
   CXX_STANDARD 11
   COMPILE_FLAGS "${OCT_FLAGS}"
   LINK_FLAGS ${OCT_LD_FLAGS}
@@ -160,7 +157,6 @@ target_link_libraries (oct_af_fftconv
   )
 
 set_target_properties (oct_af_fftconv PROPERTIES
-  C_STANDARD 99
   CXX_STANDARD 11
   COMPILE_FLAGS "${OCT_FLAGS}"
   LINK_FLAGS ${OCT_LD_FLAGS}
